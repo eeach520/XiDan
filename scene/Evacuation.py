@@ -80,15 +80,6 @@ class Evacuation:
         self.ax = self.fig.add_subplot(111)
 
         for tri in self.tris:
-            # if tri.near_index != -1:
-            #     ac = self.tris[tri.near_index].center
-            #     xx = [tri.center.x, ac.x]
-            #     yy = [tri.center.y, ac.y]
-            #     plt.plot(xx, yy, color="red")
-            # for pair in (tri.ls_A, tri.ls_B,tri.ls_C):
-            #     xx = [pair.start.x, pair.end.x]
-            #     yy = [pair.start.y, pair.end.y]
-            #     plt.plot(xx, yy, color="red")
             plt.fill([tri.A.x, tri.B.x, tri.C.x, tri.A.x], [tri.A.y, tri.B.y, tri.C.y, tri.A.y], color="lavender")
         for item in lb:
             plt.plot(item[0], item[1], color='black', linewidth=1)
@@ -123,7 +114,7 @@ class Evacuation:
 
         def update(n):
             self.set_pedestrian_velocity()
-            # self.set_attacker_velocity()
+            self.set_attacker_velocity()
             for idx, agt in enumerate(self.pedestrian_agents):
                 if aw[idx] is not None:
                     aw[idx].remove()
@@ -134,117 +125,19 @@ class Evacuation:
                         p_A[idx] = None
                     aw[idx] = None
                     continue
-                # aw[idx] = agt.plot("black")
-                # self.ax.add_patch(aw[idx])
+                aw[idx] = agt.plot("black")
+                self.ax.add_patch(aw[idx])
                 p_A[idx].set_center((agt.center.x, agt.center.y))
-            # for idx, agt in enumerate(self.attack_agents):
-            #     if len(pw) > idx and pw[idx] is not None:
-            #         pw[idx].remove()
-            #     arw = agt.plot("black")
-            #     self.ax.add_patch(arw)
-            #     pw[idx] = arw
-            #     a_A[idx].set_center((agt.center.x, agt.center.y))
+            for idx, agt in enumerate(self.attack_agents):
+                if len(pw) > idx and pw[idx] is not None:
+                    pw[idx].remove()
+                arw = agt.plot("black")
+                self.ax.add_patch(arw)
+                pw[idx] = arw
+                a_A[idx].set_center((agt.center.x, agt.center.y))
 
         self.ani = FuncAnimation(self.fig, update, frames=200, interval=400, repeat=False)
         plt.show()
-
-    def fake(self):
-        lb, ob, ib = self.reader.get_basic_map()
-        self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
-        for tri in self.tris:
-            plt.fill([tri.A.x, tri.B.x, tri.C.x, tri.A.x], [tri.A.y, tri.B.y, tri.C.y, tri.A.y], color="lavender")
-        a, b = np.mgrid[30000:600000:1000, 30000:335000:1000]
-        m, n = a.shape
-        c = np.zeros([m, n])
-        pList = list(self.point_map.keys())
-        for i in range(m):
-            for j in range(n):
-                p = Point(0.0 + a[i][j], 0.0 + b[i][j])
-                flag = False
-                d = 0
-                for tri in self.tris:
-                    if tri.is_inner_point(p):
-                        for pp in pList:
-                            if math.sqrt((pp.x - p.x) ** 2 + (pp.y - p.y) ** 2) <= 35000:
-                                d += 1
-                        flag = True
-                        break
-                if flag:
-                    c[i][j] = d
-        ax = plt.subplot(111, projection='3d')
-        # ax.set_title('good')
-        ax.plot_surface(a, b, c, rstride=2, cstride=1, cmap=plt.cm.Spectral)
-        print(c)
-        # 设置坐标轴标签
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_zlabel('p')
-        plt.axis("off")
-        plt.show()
-        # plt.xlim(30000, 600000)
-        # plt.ylim(30000, 335000)
-        # plt.axis("off")
-        # plt.show()
-
-
-    def d_run(self):
-        self.init_attacker()
-        self.init_pedestrian()
-        lb, ob, ib = self.reader.get_basic_map()
-
-        self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
-
-        for tri in self.tris:
-            plt.fill([tri.A.x, tri.B.x, tri.C.x, tri.A.x], [tri.A.y, tri.B.y, tri.C.y, tri.A.y], color="lavender")
-        for item in lb:
-            plt.plot(item[0], item[1], color='black', linewidth=1)
-        for o in ob:
-            self.ax.add_patch(o)
-        xx, yy = [], []
-        for i in ib:
-            xx.append(i.x)
-            yy.append(i.y)
-        plt.fill(xx, yy, color="white")
-        map = []
-        for i in range(601):
-            seq = [0] * 3351
-            map.append(seq)
-        epoch = 1
-        while True:
-            if epoch % 100 == 0:
-                print("this is {} epoch, done!".format(epoch))
-            epoch += 1
-            self.set_pedestrian_velocity()
-            flag = False
-            for agt in self.pedestrian_agents:
-                if agt.tri_id != -1:
-                    flag = True
-                    x, y = int(agt.center.x / 1000), int(agt.center.y / 1000)
-                    map[x][y] += 1
-            if not flag:
-                break
-        max_t = 0
-        for seq in map:
-            for t in seq:
-                max_t = max(max_t, t)
-        print(max_t)
-        print("开始绘图")
-        for i, seq in enumerate(map):
-            for j, t in enumerate(seq):
-                if t > 0:
-                    A = [i * 1000, j * 1000]
-                    B = [i * 1000 + 1000, j * 1000]
-                    C = [i * 1000 + 1000, j * 1000 + 1000]
-                    D = [i * 1000, j * 1000 + 1000]
-                    red = 0.8 * math.log(t, math.e) / math.log(max_t, math.e)
-                    plt.fill([A[0], B[0], C[0], D[0], A[0]],[A[1], B[1], C[1], D[1], A[1]],color=(0.1, 0.1, 0.2 + red))
-        plt.xlim(30000, 600000)
-        plt.ylim(30000, 335000)
-        plt.axis("off")
-        plt.show()
-
 
     def set_attacker_velocity(self):
         for agent in self.attack_agents:
@@ -299,7 +192,6 @@ class Evacuation:
         v_compose = Vector.add(part1, part2)
         v_final = Vector.add(v_compose, e_eva).normalize()
         return v_final
-
 
     def update_triangle(self, agent):
         near_tri = []
