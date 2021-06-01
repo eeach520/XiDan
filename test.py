@@ -1,3 +1,6 @@
+"""
+test ORCA algorithm
+"""
 from Geometry.Point import Point
 from Geometry.LineSegment import LineSegment
 from Geometry.Line import Line
@@ -42,8 +45,8 @@ import matplotlib.colors as mcolors
 colors = list(mcolors.TABLEAU_COLORS.keys())
 print(len(colors))
 
-r = 2
-v_max = 5
+r = 5
+v_max = 6
 
 xx = np.linspace(-100, 100, 8)
 hi = []

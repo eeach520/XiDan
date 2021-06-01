@@ -42,7 +42,7 @@ def update(origin, VO: [], SO: [], t: int, v_max: float) -> Vector:
             if panel is not None:
                 limit_2D.append(panel)
         except ValueError:
-            print("已经发生碰撞，不管了")
+            print("collide happened")
     limit_SO = []
     for tar in SO_l:
         limit_SO.append(get_SO_plane(origin, tar, 2))
@@ -54,13 +54,8 @@ def update(origin, VO: [], SO: [], t: int, v_max: float) -> Vector:
         for li in limit_2D:
             if res.x * li[0] + res.y * li[1] + li[2] > 1e-5:
                 print("2D 结果不合法:", res.x * li[0] + res.y * li[1] + li[2])
-                print(limit_2D)
-                print(origin.v_pref)
-                print(v_max)
-                print(res)
-                print("2D结束")
         return Vector(res.x, res.y)
-    print("2D无解")
+    print("2D no solution")
     limit_3D = []
     for limit in limit_2D:
         limit_3D.append([limit[0], limit[1], -1, limit[2]])
@@ -68,17 +63,13 @@ def update(origin, VO: [], SO: [], t: int, v_max: float) -> Vector:
         limit_3D.append([limit[0], limit[1], 0, limit[2]])
     stat, res = LP3D_solution(limit_3D, [0, 0, -1], v_max / 1.414)
     if not stat:
-        print("遇到无解的情况了哦")
+        print("3D no solution")
         print(limit_3D)
         print(v_max)
         return Vector(0, 0)
     for lim in limit_3D:
         if lim[0] * res[0] + lim[1] * res[1] + lim[2] * res[2] + lim[3] > 1e-9:
             print("3D结果不合法")
-            print(limit_3D)
-            print(v_max)
-            print(res)
-            print("3D结束")
     return Vector(res[0], res[1])
 
 
@@ -167,11 +158,6 @@ def closest_point_and_normal(VO_area: [], p: Point):
 
 def get_SO_plane(origin, target, t):
     SO_area = get_line_VO(origin, target, t)
-    if target.distance(origin.center) < origin.r:
-        print(target.start)
-        print(target.end)
-        print(origin.center)
-        print("已经撞到边界了")
     p = Point(0, 0)
     n, p = get_SO_closest_line(SO_area, p)
     a, b = n.x, n.y
