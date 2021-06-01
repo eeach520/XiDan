@@ -20,5 +20,7 @@ from scene.Evacuation import Evacuation
 # # print(a == b)
 # print(round(2.00))
 
-e = Evacuation({"number": 10, "radius": 20, "v_max": 10}, {"number": 1000, "radius": 200, "v_max": 10})
-e.run()
+e = Evacuation({"number": 10, "radius": 200, "v_max": 10}, {"number": 1000, "radius": 200, "v_max": 10})
+# e.run()
+# e.d_run()
+e.fake()

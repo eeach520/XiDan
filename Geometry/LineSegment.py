@@ -54,9 +54,15 @@ class LineSegment:
         real_cross_point = self.line.cross(a=a, b=b, c=c)
         return self.is_inner(real_cross_point)
 
-    def evade_vector(self, p: Point):
+    def evade_vector(self, p: Point, radius=200):
         _, des = self.closest_distance(p)
-        return Vector(des.x - p.x, des.y - p.y)
+        dx1, dy1 = des.x - self.start.x, des.y - self.start.y
+        dx2, dy2 = des.x - self.end.x, des.y - self.end.y
+        d1, d2 = math.sqrt(dx1 ** 2 + dy1 ** 2), math.sqrt(dx2 ** 2 + dy2 ** 2)
+        if min(d1, d2) < radius:
+            mid = Point((self.start.x + self.end.x) / 2, (self.end.y + self.start.y) / 2)
+            return Vector(mid.x - p.x, mid.y - p.y).normalize()
+        return Vector(des.x - p.x, des.y - p.y).normalize()
 
     def segment_cross(self, line) -> bool:
         """

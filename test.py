@@ -42,8 +42,8 @@ import matplotlib.colors as mcolors
 colors = list(mcolors.TABLEAU_COLORS.keys())
 print(len(colors))
 
-r = 5
-v_max = 8
+r = 2
+v_max = 5
 
 xx = np.linspace(-100, 100, 8)
 hi = []
@@ -56,14 +56,15 @@ for pp in xx:
 #     agents.append(Agent(li[i], hi[len(li) - i - 1], r, v_max))
 agents += [
     Agent(Point(80, 0), Point(-80, 0), r, v_max),
+    Agent(Point(0, 80), Point(0, -80), r, v_max),
     Agent(Point(-80, 0), Point(80, 0), r, v_max),
     Agent(Point(5, 90), Point(5, -80), r, v_max),
-    # Agent(Point(-10, -80), Point(-10, 80), r, v_max)
-    # , Agent(Point(80, 80), Point(-80, -80), r, v_max)
-    # , Agent(Point(-80, -80), Point(80, 80), r, v_max)
-    # , Agent(Point(-83, 86), Point(80, -80), r, v_max)
-    # , Agent(Point(80, -80), Point(-80, 80), r, v_max)
-    # , Agent(Point(40, -80), Point(-40, 80), r, v_max)
+    Agent(Point(-10, -80), Point(-10, 80), r, v_max)
+    , Agent(Point(80, 80), Point(-80, -80), r, v_max)
+    , Agent(Point(-80, -80), Point(80, 80), r, v_max)
+    , Agent(Point(-83, 86), Point(80, -80), r, v_max)
+    , Agent(Point(80, -80), Point(-80, 80), r, v_max)
+    , Agent(Point(40, -80), Point(-40, 80), r, v_max)
 ]
 
 cirs = []
@@ -99,7 +100,7 @@ def updates(n):
     for index, item in enumerate(agents):
         b = agents[:index]
         c = agents[index + 1:]
-        v.append(update(item, b + c, [], 3, v_max))
+        v.append(update(item, b + c, [], 30, v_max))
     for index, vv in enumerate(v):
         agents[index].next_step(vv)
         d = agents[index].plot()
@@ -114,7 +115,7 @@ def updates(n):
     return
 
 
-ani = FuncAnimation(fig, updates, frames=50, interval=150)
+ani = FuncAnimation(fig, updates, frames=50, interval=50)
 plt.show()
 # extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 # ani.save('move.gif')

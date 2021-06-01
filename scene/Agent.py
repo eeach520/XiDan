@@ -8,7 +8,7 @@ from matplotlib.patches import Circle, Arrow
 
 
 class Agent:
-    def __init__(self, center: Point, radius: float, v_max: float, tri_id=0):
+    def __init__(self, center: Point, radius: float, index: int, a_type: str, v_max: float, tri_id=0):
         self.center = center
         # self.r = radius
         self.r = 400
@@ -18,6 +18,9 @@ class Agent:
         self.target = None
         self.tri_id = tri_id
         self.is_shown = True
+        self.id = index
+        self.a_type = a_type
+        self.is_alive = True
 
     def plot(self, arrow_color):
         if self.v_now is not None and self.v_now.len > 1e-5:

@@ -185,7 +185,7 @@ class DXFReader:
                                          is_entrance=True,
                                          eva_dir=eva_dir,
                                          min_eva_dis=eva_dis)
-                            print("this index is {}, dir is {}, dis is {}".format(self.counter, eva_dir, eva_dis))
+                            # print("this index is {}, dir is {}, dis is {}".format(self.counter, eva_dir, eva_dis))
                     self.centers.append(t.center)
                     self.tris.append(t)
                     self.counter += 1

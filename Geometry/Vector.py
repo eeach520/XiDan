@@ -8,7 +8,7 @@ class Vector:
 
     def __init__(self, x: float, y: float):
         self.x, self.y = x, y
-        self.len = math.sqrt(x ** 2 + y ** 2)
+        self.len = math.sqrt(x * x + y * y)
 
     def normalize(self):
         if abs(self.len) < 1e-9:
