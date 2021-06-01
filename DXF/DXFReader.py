@@ -40,7 +40,7 @@ class DXFReader:
         self.init()
 
     def get_tri_edges(self):
-        dxf = dxfgrabber.readfile("raw/xidan_final_1.dxf")
+        dxf = dxfgrabber.readfile("raw/xidan-plus.dxf")
         for e in dxf.entities:
             if e.dxftype == 'LINE':
                 if e.color in (18, 242, 5, 215, 1):
@@ -103,7 +103,7 @@ class DXFReader:
                     self.color_ob.append(ob)
                 self.color_ob.append(head)
         self.sort_color()
-        at_dxf = dxfgrabber.readfile("raw/xidan-plus.dxf")
+        at_dxf = dxfgrabber.readfile("raw/xidan.dxf")
         inner = []
         for e in at_dxf.entities:
             if e.dxftype == 'CIRCLE' and e.color == 240:
